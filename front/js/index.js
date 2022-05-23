@@ -1,17 +1,22 @@
 fillSection();
 
 // Récupération des articles de l'API
-async function getArticles() {
+async function getArticles() 
+{
     var articlesCatch = await fetch("http://localhost:3000/api/products")
     return await articlesCatch.json();
 }
 
-async function fillSection() {
-    var result = await getArticles ()
-    .then(function (resultatAPI){
+async function fillSection() 
+{
+    var result = await getArticles()
+    .then(function (resultatAPI)
+    {
         const articles = resultatAPI;
         console.table(articles);
-        for (let article in articles) {
+
+        for (let article in articles) 
+        {
 
             // Insertion de l'élément "a"
             let productLink = document.createElement("a");
@@ -39,9 +44,16 @@ async function fillSection() {
             productArticle.appendChild(productDescription);
             productDescription.classList.add("productName");
             productDescription.innerHTML = resultatAPI[article].description;
+
+            // Insertion du prix 
+            let productPrice = document.createElement("price");
+            productArticle.appendChild(productPrice);
+            productPrice.classList.add("productName");
+            productPrice.innerHTML = resultatAPI[article].price;
         }
     })
-    .catch (function(error){
+    .catch (function(error)
+    {
         return error;
     });
-}
+}    
