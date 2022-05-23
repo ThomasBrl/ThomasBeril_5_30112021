@@ -192,8 +192,6 @@ function deleteProduct() {
 }
 deleteProduct();
 
-
-
 //Envoi des informations client au localstorage
 
 
@@ -218,7 +216,8 @@ btn_commander.addEventListener("click", (event)=>
     }
     
      //validation du nom
-
+     
+    
     let lastNameErrorMsg = '';
 
     if (charRegExp.test(inputLastName.value)) 
@@ -246,7 +245,6 @@ btn_commander.addEventListener("click", (event)=>
         addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
     }
     
-
      //validation de la ville
     
     let cityErrorMsg = '';
@@ -260,7 +258,6 @@ btn_commander.addEventListener("click", (event)=>
         errorOrder += 1;
         cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
     }
-    
 
      //validation de l'email
     
@@ -275,8 +272,6 @@ btn_commander.addEventListener("click", (event)=>
         errorOrder += 1;
         emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
     }
-
-   
 
     //Récupération des coordonnées du formulaire client
     let inputName = document.getElementById('firstName');
@@ -303,8 +298,8 @@ btn_commander.addEventListener("click", (event)=>
             city: inputCity.value,
             email: inputMail.value,
         },
-        products: idProducts,
-    } 
+        products: idProducts
+    }; 
         
     const options = 
     {
@@ -315,18 +310,11 @@ btn_commander.addEventListener("click", (event)=>
             "Content-Type": "application/json" 
         }
     };
-    Lconsole.log(errorOrder);
-    if (errorOrder == 0)
-    {
-       
-    }
-    else 
+
+    console.log(errorOrder);
+
+    if (errorOrder > 0)
     {
         alert("Probleme formulaire");
     }
 })
-
-
-
-
-
