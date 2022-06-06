@@ -198,14 +198,22 @@ deleteProduct();
 const btn_commander = document.getElementById("order");
 
  //Ecouter le panier
-btn_commander.addEventListener("click", (event)=>
-{
-    
-    //validation du prénom
+btn_commander.addEventListener("click", (event) => {
+ 
+event.preventDefault();    // -> on stoppe l'envoi du formulaire type submit car on le gère de notre côté plus bas
+
+      //Récupération des coordonnées du formulaire client
+    let inputName = document.getElementById('firstName');
+    let inputLastName = document.getElementById('lastName');
+    let inputAdress = document.getElementById('address');
+    let inputCity = document.getElementById('city');
+    let inputMail = document.getElementById('email');  
+
+ //validation du prénom
 
     let firstNameErrorMsg = '';
 
-    if (charRegExp.test(inputFirstName.value)) 
+    if (charRegExp.test(inputName.value)) 
     {
         firstNameErrorMsg.innerHTML = '';
     } 
@@ -235,7 +243,7 @@ btn_commander.addEventListener("click", (event)=>
     
     let addressErrorMsg = '';
 
-    if (addressRegExp.test(inputAddress.value)) 
+    if (addressRegExp.test(inputAdress.value))
     {
         addressErrorMsg.innerHTML = '';
     } 
@@ -263,7 +271,7 @@ btn_commander.addEventListener("click", (event)=>
     
     let emailErrorMsg = '';
 
-    if (emailRegExp.test(inputEmail.value)) 
+    if (emailRegExp.test(inputMail.value)) 
     {
         emailErrorMsg.innerHTML = '';
     } 
@@ -272,13 +280,6 @@ btn_commander.addEventListener("click", (event)=>
         errorOrder += 1;
         emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
     }
-
-    //Récupération des coordonnées du formulaire client
-    let inputName = document.getElementById('firstName');
-    let inputLastName = document.getElementById('lastName');
-    let inputAdress = document.getElementById('address');
-    let inputCity = document.getElementById('city');
-    let inputMail = document.getElementById('email');
         
     //Construction d'un array depuis le local storage
     let idProducts = [];
@@ -286,8 +287,7 @@ btn_commander.addEventListener("click", (event)=>
     {
         idProducts.push(produitLocalStorage[i].idProduit);
     }
-    console.log(idProducts);
-
+ 
     const order = 
     {
         contact : 
@@ -299,22 +299,28 @@ btn_commander.addEventListener("click", (event)=>
             email: inputMail.value,
         },
         products: idProducts
-    }; 
-        
-    const options = 
+    };
+
+    if (errorOrder > 0)
     {
+        alert("Probleme formulaire"); 
+    }
+
+    else {
+    // fetch
+    fetch("http://localhost:3000/api/products/order/", { 
         method: 'POST',
         body: JSON.stringify(order),
         headers: 
         {
             "Content-Type": "application/json" 
         }
-    };
-
-    console.log(errorOrder);
-
-    if (errorOrder > 0)
-    {
-        alert("Probleme formulaire");
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        document.location.href = "confirmation.html?orderId=" + data.orderId;
+    })
+    .catch((err) => console.error(err));
     }
-})
+    
+}, false);
