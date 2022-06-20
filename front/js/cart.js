@@ -121,7 +121,7 @@ function getTotals()
 
     let productTotalQuantity = document.getElementById('totalQuantity');
     productTotalQuantity.innerHTML = totalQtt;
-    console.log(totalQtt);
+    
 
     // Récupération du prix total
     totalPrice = 0;
@@ -133,7 +133,7 @@ function getTotals()
 
     let productTotalPrice = document.getElementById('totalPrice');
     productTotalPrice.innerHTML = totalPrice;
-    console.log(totalPrice);
+    
 }
 getTotals();
 
@@ -197,22 +197,20 @@ deleteProduct();
 
 const btn_commander = document.getElementById("order");
 
- //Ecouter le panier
+//Ecouter le panier
 btn_commander.addEventListener("click", (event) => {
  
-event.preventDefault();    // -> on stoppe l'envoi du formulaire type submit car on le gère de notre côté plus bas
+event.preventDefault(); // -> on stop l'envoie du formulaire type submit car on le gère de notre côté plus bas
 
-      //Récupération des coordonnées du formulaire client
+    //Récupération des coordonnées du formulaire client
     let inputName = document.getElementById('firstName');
     let inputLastName = document.getElementById('lastName');
     let inputAdress = document.getElementById('address');
     let inputCity = document.getElementById('city');
     let inputMail = document.getElementById('email');  
 
- //validation du prénom
-
+    //validation du prénom
     let firstNameErrorMsg = '';
-
     if (charRegExp.test(inputName.value)) 
     {
         firstNameErrorMsg.innerHTML = '';
@@ -223,11 +221,9 @@ event.preventDefault();    // -> on stoppe l'envoi du formulaire type submit car
         firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
     }
     
-     //validation du nom
-     
-    
-    let lastNameErrorMsg = '';
 
+    //validation du nom 
+    let lastNameErrorMsg = '';
     if (charRegExp.test(inputLastName.value)) 
     {
         lastNameErrorMsg.innerHTML = '';
@@ -239,10 +235,8 @@ event.preventDefault();    // -> on stoppe l'envoi du formulaire type submit car
     }
     
 
-     //validation de l'adresse
-    
+    //validation de l'adresse
     let addressErrorMsg = '';
-
     if (addressRegExp.test(inputAdress.value))
     {
         addressErrorMsg.innerHTML = '';
@@ -253,10 +247,9 @@ event.preventDefault();    // -> on stoppe l'envoi du formulaire type submit car
         addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
     }
     
-     //validation de la ville
-    
-    let cityErrorMsg = '';
 
+    //validation de la ville
+    let cityErrorMsg = '';
     if (charRegExp.test(inputCity.value)) 
     {
         cityErrorMsg.innerHTML = '';
@@ -267,10 +260,8 @@ event.preventDefault();    // -> on stoppe l'envoi du formulaire type submit car
         cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
     }
 
-     //validation de l'email
-    
+    //validation de l'email
     let emailErrorMsg = '';
-
     if (emailRegExp.test(inputMail.value)) 
     {
         emailErrorMsg.innerHTML = '';
@@ -305,9 +296,8 @@ event.preventDefault();    // -> on stoppe l'envoi du formulaire type submit car
     {
         alert("Probleme formulaire"); 
     }
-
     else {
-    // fetch
+    //Méthode fetch
     fetch("http://localhost:3000/api/products/order/", { 
         method: 'POST',
         body: JSON.stringify(order),
@@ -321,6 +311,5 @@ event.preventDefault();    // -> on stoppe l'envoi du formulaire type submit car
         document.location.href = "confirmation.html?orderId=" + data.orderId;
     })
     .catch((err) => console.error(err));
-    }
-    
+    }   
 }, false);
