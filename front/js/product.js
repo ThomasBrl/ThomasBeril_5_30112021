@@ -1,8 +1,6 @@
-
 var str = window.location.href;
 var url = new URL(str);
 var idProduct = url.searchParams.get("id");
-console.log(idProduct);
 let article = "";
 
 const colorPicked = document. querySelector("#colors");
@@ -43,15 +41,15 @@ function getPost(article)
     productImg.src = article.imageUrl;
     productImg.alt = article.altTxt;
 
-    // Modification du titre "h1"
+    // Insertion du titre "h1"
     let productName = document.getElementById('title');
     productName.innerHTML = article.name;
 
-    // Modification du prix
+    // Insertion du prix
     let productPrice = document.getElementById('price');
     productPrice.innerHTML = article.price;
 
-    // Modification de la description
+    // Insertion de la description
     let productDescription = document.getElementById('description');
     productDescription.innerHTML = article.description;
 
