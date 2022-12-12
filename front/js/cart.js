@@ -77,7 +77,7 @@ function getTotalQty(api, products) {
     }
 
     // Si j'ai au moins un produit dans le panier :
-    if (sumQty > 1) {
+    if (sumQty >= 1) {
       for (let product of products) {
         for (let data of api) {
           if (product.idProduit === data._id) {
@@ -137,6 +137,7 @@ function deleteItem(api, products) {
             product.idProduit === productId &&
             product.couleurProduit === productColor
         );
+        // je supprime l'objet de mon tableau en récupérant l'index
         products.splice(objIndex, 1);
         let productsJson = JSON.stringify(products);
         localStorage.setItem("produit", productsJson);
@@ -300,6 +301,7 @@ function orderProduct(order) {
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     headers: {
+      // Typage de la requete en format JSON
       Accept: "application/json",
       "Content-Type": "application/json",
     },

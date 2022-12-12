@@ -1,6 +1,6 @@
-var str = window.location.href;
-var url = new URL(str);
-var idProduct = url.searchParams.get("id");
+let str = window.location.href;
+let url = new URL(str);
+let idProduct = url.searchParams.get("id");
 let article = "";
 const colorPicked = document.querySelector("#colors");
 const quantityPicked = document.querySelector("#quantity");
@@ -22,7 +22,7 @@ function getArticle() {
       }
     })
     .catch((error) => {
-      console.log("Erreur de la requête API");
+      console.log("Erreur de la requête API" + error);
     });
 }
 
