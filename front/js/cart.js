@@ -1,4 +1,4 @@
-// Récupération des informations des produits depuis l'API
+// Récupération des informations des produits depuis l'API et du local storage 
 fetch("http://localhost:3000/api/products/")
   .then(function (res) {
     if (res.ok) {
@@ -14,7 +14,10 @@ fetch("http://localhost:3000/api/products/")
     console.log(error);
   });
 
-// Fonction pour afficher les produits dans le DOM
+// Fonction pour afficher les produits dans le DOM et les modifier ou les supprimer du panier : 
+// - Affichage des produits dans le panier 
+// - Modification de la quantité d'un produit dans le panier
+// - Suppression d'un produit du panier
 function displayItem(api, products) {
   if (products === null || products.length === 0) {
     const emptyCart = document.createElement("p");
@@ -29,16 +32,16 @@ function displayItem(api, products) {
         }
       }
     }
-
     changeQty(api, products);
     deleteItem(api, products);
   }
 }
 
-// Création des cartes dans le DOM
+// Création des cartes dans le DOM pour chaque produit du panier 
 function createProductCard(localStorage, api) {
   console.log(api);
-  const produitPanier = `<article class="cart__item" data-id="${api._id}" data-color=${localStorage.couleurProduit}>
+  const produitPanier = 
+  `<article class="cart__item" data-id="${api._id}" data-color=${localStorage.couleurProduit}>
     <div class="cart__item__img">
       <img src="${api.imageUrl}" alt="Photographie d'un canapé">
     </div>
@@ -57,16 +60,14 @@ function createProductCard(localStorage, api) {
        </div>
       </div>
     </div>
-       </article>`;
-
-  document
-    .getElementById("cart__items")
-    .insertAdjacentHTML("beforeend", produitPanier);
+   </article>`;
+  document.getElementById("cart__items");
+  document.insertAdjacentHTML("beforeend", produitPanier);
 }
 
-// On calcule le nombre de produit dans le panier
+// On calcule le nombre de produit dans le panier et le prix total
 function getTotalQty(api, products) {
-  // On créer une variable qu'on incrémente à chaque tour de boucle ( SUMQTY )
+  // On créer une variable qu'on incrémente à chaque tour de boucle ( SUMQTY ) et une autre pour le prix total ( PRICETOTAL )
   let sumQty = 0;
   let priceTotal = 0;
   if (products === null) {
@@ -76,7 +77,9 @@ function getTotalQty(api, products) {
       sumQty = sumQty + parseInt(product.quantiteProduit);
     }
 
-    // Si j'ai au moins un produit dans le panier :
+    // Si j'ai au moins un produit dans le panier 
+    // alors je calcule le prix total et j'affiche le nombre de produit dans le panier et le prix total :
+    // Sinon le panier est vide donc j'informe le client
     if (sumQty >= 1) {
       for (let product of products) {
         for (let data of api) {
@@ -88,11 +91,16 @@ function getTotalQty(api, products) {
       document.getElementById("totalQuantity").innerText = sumQty;
       document.getElementById("totalPrice").innerText = priceTotal;
     } else {
-      // Sinon le panier est vide donc j'informe le client
     }
   }
 }
 
+// Fonction pour modifier la quantité d'un produit dans le panier
+// Cette fonction permet de changer la quantité d'un produit dans le panier en utilisant l'API.
+// Elle utilise l'événement "change" pour vérifier si la quantité d'un produit est modifiée.
+// Elle récupère ensuite l'élément HTML correspondant au produit et ses données (id et couleur).
+// Avec les données elle vérifie si le produit existe dans le tableau de produits si oui, elle met à jour la quantité dans le tableau. 
+// Elle enregistre ensuite les modifications dans le local storage et met à jour le total de quantité d'articles dans le panier.
 function changeQty(api, products) {
   const inputs = document.querySelectorAll(".itemQuantity");
   inputs.forEach((input) => {
@@ -104,7 +112,7 @@ function changeQty(api, products) {
         products.some(
           (e) => e.idProduit === productId && e.couleurProduit === productColor
         )
-      ) {
+      ){
         let objIndex = products.findIndex(
           (product) =>
             product.idProduit === productId &&
@@ -119,6 +127,15 @@ function changeQty(api, products) {
   });
 }
 
+// Fonction pour supprimer un produit du panier
+// La fonction deleteItem() prend en entrée deux paramètres : api et products 
+// Elle permet de delet un produit du panier en cliquant sur le bouton "supprimer" 
+// La méthode .querySelectorAll() permet de sélectionner tous les boutons de suppression d'article 
+// puis elle boucle pour ajouter un écouteur d'événement "click" à chacun d'eux
+// Lorsque l'utilisateur clique sur un bouton de suppression, l'élément HTML associé à l'article est supprimé de la page 
+// (méthode .remove()) et l'élément correspondant est aussi supprimé du tableau products 
+// Enfin, elle utilise la méthode JSON.stringify() pour convertir le tableau mis à jour en string 
+// pour le stocker dans le localStorage, et appelle la fonction getTotalQty() pour mettre à jour le total du panier
 function deleteItem(api, products) {
   const itemDelete = document.querySelectorAll(".deleteItem");
   itemDelete.forEach((item) => {
@@ -137,7 +154,6 @@ function deleteItem(api, products) {
             product.idProduit === productId &&
             product.couleurProduit === productColor
         );
-        // je supprime l'objet de mon tableau en récupérant l'index
         products.splice(objIndex, 1);
         let productsJson = JSON.stringify(products);
         localStorage.setItem("produit", productsJson);
@@ -152,7 +168,7 @@ firstName.addEventListener("change", function () {
   validFirstName(this);
 });
 
-// fonction pour verifier si le regex "lastname"est respecté ou pas
+// Fonction pour verifier si le regex "lastname" est respecté ou pas
 function validFirstName(inputFirstName) {
   let textRegExp = new RegExp("^([a-zA-Z]+(?:. |-| |'))*[a-zA-Z]*$");
 
@@ -174,7 +190,7 @@ lastName.addEventListener("change", function () {
   validLastName(this);
 });
 
-// fonction pour verifier si le regex "name"est respecté ou pas
+// Fonction pour verifier si le regex "name" est respecté ou pas
 function validLastName(inputLastName) {
   let textRegExp = new RegExp("^([a-zA-Z]+(?:. |-| |'))*[a-zA-Z]*$");
 
@@ -196,7 +212,7 @@ address.addEventListener("change", function () {
   validAddress(this);
 });
 
-// fonction pour verifier si le regex "address"est respecté ou pas
+// Fonction pour verifier si le regex "address" est respecté ou pas
 function validAddress(inputAddress) {
   let textRegExp = new RegExp(
     "[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)"
@@ -220,7 +236,7 @@ let city = document.getElementById("city");
 city.addEventListener("change", function () {
   validCity(this);
 });
-// fonction pour verifier si le regex "city"est respecté ou pas
+// Fonction pour verifier si le regex "city" est respecté ou pas
 function validCity(inputCity) {
   let textRegExp = new RegExp("^([a-zA-Z]+(?:. |-| |'))*[a-zA-Z]*$");
 
@@ -241,7 +257,7 @@ email.addEventListener("change", function () {
   validEmail(this);
 });
 
-// fonction pour verifier si le regex"email" est respecté ou pas
+// Fonction pour verifier si le regex"email" est respecté ou pas
 function validEmail(inputEmail) {
   let emailRegExp = new RegExp(
     /^([a-z0-9]+(?:[._-][a-z0-9]+)*)@([a-z0-9]+(?:[.-][a-z0-9]+)*\.[a-z]{2,})$/
@@ -260,7 +276,8 @@ function validEmail(inputEmail) {
     return true;
   }
 }
-// recuperer les infos saisie par l'utilisateur
+
+// Recuperer les infos saisie par l'utilisateur
 document.getElementById("order").addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -268,7 +285,7 @@ document.getElementById("order").addEventListener("click", function (e) {
   if (products === null || products.length < 1) {
     alert("Panier vide");
   } else if (
-    // verification des infos saisie l'utilisateur
+    // verification des infos saisie par l'utilisateur
     validFirstName(firstName) == true &&
     validLastName(lastName) == true &&
     validAddress(address) == true &&
@@ -290,13 +307,17 @@ document.getElementById("order").addEventListener("click", function (e) {
       },
       products: productsId,
     };
-
     orderProduct(order);
   }
 });
 
-//Envoi de l'utilisateur vers la page de confirmation en supprimant le localStorage
-
+// Envoi de l'utilisateur vers la page de confirmation en supprimant le localStorage :
+// La fonction "orderProduct" utilise la méthode fetch pour envoyer une requête HTTP de type "POST" 
+// à une API avec les données de la commande "order" passée en paramètre
+// Si la réponse est positive, la réponse est convertie en format JSON et l'utilisateur est redirigé vers 
+// la page de confirmation de commande avec l'ID de la commande passé en paramètre
+// Si une erreur se produit, elle est affichée dans la console
+// A la fin le localStorage est vidé
 function orderProduct(order) {
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
@@ -307,17 +328,17 @@ function orderProduct(order) {
     },
     body: JSON.stringify(order),
   })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-    })
-    .then(function (value) {
-      window.location = `./confirmation.html?orderId=${value.orderId}`;
-      window.location = "./confirmation.html?orderId=" + value.orderId;
-      localStorage.clear();
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  .then(function (res) {
+    if (res.ok) {
+       return res.json();
+    }
+  })
+  .then(function (value) {
+    window.location = `./confirmation.html?orderId=${value.orderId}`;
+    window.location = "./confirmation.html?orderId=" + value.orderId;
+    localStorage.clear();
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 }
