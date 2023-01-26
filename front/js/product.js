@@ -16,16 +16,23 @@ function getArticle() {
 
     // Répartition des données de l'API dans le DOM
     .then(async function (resultatAPI) {
-      article = await resultatAPI;
-      if (article) {
-        getPost(article);
-      }
-    })
-    .catch((error) => {
-      console.log("Erreur de la requête API" + error);
-    });
+        article = await resultatAPI;
+    if (article) {
+      getPost(article);
+    }
+  })
+  .catch((error) => {
+    console.log("Erreur de la requête API" + error);
+  });
 }
 
+// Cette fonction "getPost" prend en paramètre l'objet "article"
+// Elle utilise les méthodes "createElement" et "appendChild" pour créer des éléments HTML, 
+// et les ajoute au DOM en utilisant "querySelector" et "getElementById" 
+// Elle utilise la propriété "innerHTML" pour définir le contenu des éléments. 
+// Elle ajoute également des options de couleur à un élément "select" 
+// en utilisant une boucle "for of" pour parcourir les couleurs de l'article. 
+// En dernier elle appelle une fonction addToCart pour ajouter un article dans le panier.
 function getPost(article) {
   // Insertion de l'image
   let productImg = document.createElement("img");
@@ -58,7 +65,14 @@ function getPost(article) {
   addToCart(article);
 }
 
-//Gestion du panier
+// La fonction "addToCart" prend en paramètre un objet "article" qui représente un article spécifique. 
+// Elle utilise la méthode "addEventListener" pour écouter l'événement "click"
+// Quand l'utilisateur clique sur ce bouton, une fonction est exécutée. 
+// Cette fonction vérifie si l'utilisateur a sélectionné une quantité supérieure à 0, inférieure à 100 et non nulle ainsi qu'une
+// couleur sélectionnée. Si c'est le cas, elle crée un objet "optionsProduit" contenant des informations sur le produit choisi 
+// (id, couleur et quantité) puis vérifie s'il existe déjà un produit similaire dans le local storage, si c'est le cas 
+// elle incrémente la quantité, sinon elle ajoute le produit au local storage. Enfin elle affiche une confirmation pour 
+// l'utilisateur et lui propose d'être redirigé vers la page panier. Sinon, elle affiche un message d'erreur.
 function addToCart(article) {
   const btn_envoyerPanier = document.querySelector("#addToCart");
 
