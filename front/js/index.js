@@ -1,11 +1,18 @@
 fillSection();
 
 // Récupération des articles de l'API
+// La fonction getArticle utilise la méthode fetch pour envoyer une requête à l'API à l'URL spécifiée en utilisant l'ID de l'article.
+// Elle return la réponse sous format json 
 async function getArticles() {
   var articlesCatch = await fetch("http://localhost:3000/api/products");
   return await articlesCatch.json();
 }
 
+// Cette fonction asynchrone "fillSection" récupère des articles à partir 
+// d'une API en utilisant la fonction "getArticles" qui retourne une promesse  
+// Elle utilise la méthode "then" pour gérer la promesse résolue et ajoute des articles au DOM en 
+// créant des éléments HTML  
+// En cas d'erreur, elle utilise la méthode "catch" pour gérer la promesse rejetée sous forme d'erreur
 async function fillSection() {
   var result = await getArticles()
     .then(function (resultatAPI) {
