@@ -40,8 +40,7 @@ function displayItem(api, products) {
 // Création des cartes dans le DOM pour chaque produit du panier 
 function createProductCard(localStorage, api) {
   console.log(api);
-  const produitPanier = 
-  `<article class="cart__item" data-id="${api._id}" data-color=${localStorage.couleurProduit}>
+  const produitPanier = `<article class="cart__item" data-id="${api._id}" data-color=${localStorage.couleurProduit}>
     <div class="cart__item__img">
       <img src="${api.imageUrl}" alt="Photographie d'un canapé">
     </div>
@@ -60,9 +59,23 @@ function createProductCard(localStorage, api) {
        </div>
       </div>
     </div>
-   </article>`;
-  document.getElementById("cart__items");
-  document.insertAdjacentHTML("beforeend", produitPanier);
+      </article>`;
+      
+  document
+  .getElementById("cart__items")
+  .insertAdjacentHTML("beforeend", produitPanier);
+
+  // On récupère tous les inputs "itemQuantity"
+  const allInputQantity = document.querySelectorAll(".itemQuantity");
+
+  // Dès que la valeur change on vérifie si la quantité est supérieure à 100
+  allInputQantity.forEach((input) => {
+      input.addEventListener("change", () => {
+          if (input.value > 100) {
+              input.value = 100;
+          }
+      });
+  });
 }
 
 // On calcule le nombre de produit dans le panier et le prix total
@@ -88,6 +101,7 @@ function getTotalQty(api, products) {
           }
         }
       }
+      
       document.getElementById("totalQuantity").innerText = sumQty;
       document.getElementById("totalPrice").innerText = priceTotal;
     } else {
@@ -175,7 +189,7 @@ function validFirstName(inputFirstName) {
   if (!textRegExp.test(inputFirstName.value)) {
     document.getElementById("firstNameErrorMsg").innerText = "Exemple : alex";
     return false;
-  } else if (inputFirstName.value.length < 2) {
+  } else if (inputFirstName.value.length < 0) {
     document.getElementById("firstNameErrorMsg").innerText =
       "Vérifiez votre Nom";
     return false;
@@ -197,7 +211,7 @@ function validLastName(inputLastName) {
   if (!textRegExp.test(inputLastName.value)) {
     document.getElementById("lastNameErrorMsg").innerText = "Exemple : doireau";
     return false;
-  } else if (inputLastName.value.length < 3) {
+  } else if (inputLastName.value.length < 0) {
     document.getElementById("lastNameErrorMsg").innerText =
       "Vérifiez votre prenom";
     return false;
@@ -222,7 +236,7 @@ function validAddress(inputAddress) {
     document.getElementById("addressErrorMsg").innerText =
       "Exemple : 81 avenue maurice chevalier";
     return false;
-  } else if (inputAddress.value.length < 4) {
+  } else if (inputAddress.value.length < 0) {
     document.getElementById("addressErrorMsg").innerText =
       "Vérifiez votre adresse";
     return false;
@@ -243,7 +257,7 @@ function validCity(inputCity) {
   if (!textRegExp.test(inputCity.value)) {
     document.getElementById("cityErrorMsg").innerText = "Exemple : Paris";
     return false;
-  } else if (inputCity.value.length < 5) {
+  } else if (inputCity.value.length < 0) {
     document.getElementById("cityErrorMsg").innerText = "Saisissez votre ville";
     return false;
   } else {
